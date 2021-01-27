@@ -2,7 +2,7 @@
 
 Name:           python-%{pypi_name}
 Version:        0.13.8
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        The little ASGI library that shines
 
 License:        BSD
@@ -69,6 +69,9 @@ rm tests/test_requests.py
 %{python3_sitelib}/%{pypi_name}-%{version}-py%{python3_version}.egg-info
 
 %changelog
+* Wed Jan 27 2021 Fedora Release Engineering <releng@fedoraproject.org> - 0.13.8-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
+
 * Wed Sep 30 2020 Itamar Reis Peixoto <itamar@ispbrasil.com.br> - 0.13.8-1
 - Initial package.
 - Switch to github sources and enable some tests

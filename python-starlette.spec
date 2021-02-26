@@ -6,7 +6,7 @@
 
 Name:           python-%{srcname}
 Version:        0.14.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        The little ASGI library that shines
 
 License:        BSD
@@ -32,7 +32,6 @@ BuildRequires:  pyproject-rpm-macros
 # Need to package this:
 #BuildRequires:  python3dist(databases[sqlite])
 BuildRequires:  python3dist(flake8)
-BuildRequires:  python3dist(mypy)
 BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(pytest-cov)
 BuildRequires:  python3dist(pytest-asyncio)
@@ -145,6 +144,9 @@ cp -p '%{SOURCE1}' .
 
 
 %changelog
+* Fri Feb 26 2021 Benjamin A. Beasley <code@musicinmybrain.net> - 0.14.2-3
+- Drop mypy BR
+
 * Thu Feb 25 2021 Benjamin A. Beasley <code@musicinmybrain.net> - 0.14.2-2
 - Use srcname macro instead of pypi_name
 - Drop obsolete python_provide macro

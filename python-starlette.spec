@@ -1,74 +1,158 @@
-%global pypi_name starlette
+%global srcname starlette
 
-Name:           python-%{pypi_name}
+# Need to package mkautodoc to build these; that, in turn, should wait on
+# https://github.com/tomchristie/mkautodoc/issues/30.
+%bcond_with html_docs
+
+Name:           python-%{srcname}
 Version:        0.14.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        The little ASGI library that shines
 
 License:        BSD
-URL:            https://github.com/encode/starlette
-#uses github sources for having tests.
+URL:            https://www.starlette.io/
 Source0:        %{pypi_source}
+Source1:        pytest.ini
 BuildArch:      noarch
 
 BuildRequires:  python3-devel
+BuildRequires:  python3dist(setuptools)
+BuildRequires:  pyproject-rpm-macros
+
+# These BR’s cannot be generated because they appear only in requirements.txt.
+# We do not need the “Optionals”, which correspond to the “full” extra, nor
+# those for “Packaging”, which are for uploading to PyPI, but we do need those
+# for “Testing”, except linters, formatters, mypy, pytest-cov:
+#   - autoflake
+#   - black==20.8b1
+#   - flake8
+#   - isort==5.*
+#   - mypy
+#   - pytest-cov
+# Need to package this:
+#BuildRequires:  python3dist(databases[sqlite])
+BuildRequires:  python3dist(flake8)
+BuildRequires:  python3dist(mypy)
 BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(pytest-cov)
 BuildRequires:  python3dist(pytest-asyncio)
-BuildRequires:  python3dist(requests)
-BuildRequires:  python3dist(itsdangerous)
-BuildRequires:  python3dist(jinja2)
-BuildRequires:  python3dist(pyyaml)
-BuildRequires:  python3dist(setuptools)
-BuildRequires:  python3dist(aiofiles)
-BuildRequires:  python3dist(graphene)
-BuildRequires:  python3dist(ujson)
 
-%description
-The little ASGI framework that shines
 
-%package -n     python3-%{pypi_name}
+%global common_description %{expand:
+Starlette is a lightweight ASGI framework/toolkit, which is ideal for building
+high performance asyncio services.
+
+It is production-ready, and gives you the following:
+
+  * Seriously impressive performance.
+  * WebSocket support.
+  * GraphQL support.
+  * In-process background tasks.
+  * Startup and shutdown events.
+  * Test client built on requests.
+  * CORS, GZip, Static Files, Streaming responses.
+  * Session and Cookie support.
+  * 100% test coverage.
+  * 100% type annotated codebase.
+  * Zero hard dependencies.}
+
+%description %{common_description}
+
+
+%generate_buildrequires
+%pyproject_buildrequires -x full
+
+
+%pyproject_extras_subpkg -n python3-%{srcname} full
+
+
+%package -n     python3-%{srcname}
 Summary:        %{summary}
-%{?python_provide:%python_provide python3-%{pypi_name}}
 
-Requires:       python3dist(aiofiles)
-Requires:       python3dist(graphene)
-Requires:       python3dist(itsdangerous)
-Requires:       python3dist(jinja2)
-Requires:       python3dist(python-multipart)
-Requires:       python3dist(pyyaml)
-Requires:       python3dist(requests)
-Requires:       python3dist(ujson)
+%description -n python3-%{srcname} %{common_description}
 
-%description -n python3-%{pypi_name}
-The little ASGI framework that shines
+
+%package doc
+Summary:        Documentation for %{name}
+
+%if %{with html_docs}
+# See “Documentation” in requirements.txt. These BR’s cannot be automatically
+# generated.
+BuildRequires:  python3dist(mkdocs)
+BuildRequires:  python3dist(mkdocs-material)
+BuildRequires:  python3dist(mkautodoc)
+%endif
+
+%description doc %{common_description}
+
 
 %prep
-%autosetup -n %{pypi_name}-%{version}
+%autosetup -n %{srcname}-%{version}
 # Remove bundled egg-info
-rm -rf %{pypi_name}.egg-info
+rm -rf %{srcname}.egg-info
+# Remove Gitter chat app from documentation; it relies on pre-compiled/minified
+# JavaScript, which is not acceptable in Fedora.
+find docs/js -type f |
+  while read -r fn
+  do
+    cat /dev/null > "${fn}"
+  done
+
 
 %build
-%py3_build
+%pyproject_wheel
+%if %{with html_docs}
+mkdocs build
+%endif
+
 
 %install
-%py3_install
+%pyproject_install
+%pyproject_save_files %{srcname}
+install -t '%{buildroot}%{_pkgdocdir}' -D -m 0644 -p README.md
+%if %{with html_docs}
+cp -rp site '%{buildroot}%{_pkgdocdir}/'
+%else
+cp -rp docs '%{buildroot}%{_pkgdocdir}/markdown'
+%endif
+
 
 %check
+# Need to package python3-databases first:
 rm tests/test_database.py
+# Built-in GraphQL support is being deprecated
+# (https://github.com/encode/starlette/issues/619), and the tests do not work
+# because they use a legacy graphql-core API that is no longer present:
+#       from graphql.execution.executors.asyncio import AsyncioExecutor
+#   E   ModuleNotFoundError: No module named 'graphql.execution.executors'
 rm tests/test_graphql.py
-rm tests/test_formparsers.py
-rm tests/test_requests.py
+
+# Sanity check: we do not want to overwrite an existing pytest.ini:
+! [ -e pytest.ini ]
+# See the file itself for comments on why this is needed.
+cp -p '%{SOURCE1}' .
+
 %pytest
 
 
-%files -n python3-%{pypi_name}
+%files -n python3-%{srcname} -f %{pyproject_files}
 %license LICENSE.md
-%doc README.md
-%{python3_sitelib}/%{pypi_name}
-%{python3_sitelib}/%{pypi_name}-%{version}-py%{python3_version}.egg-info
+
+
+%files doc
+%license LICENSE.md
+%{_pkgdocdir}
+
 
 %changelog
+* Thu Feb 25 2021 Benjamin A. Beasley <code@musicinmybrain.net> - 0.14.2-2
+- Use srcname macro instead of pypi_name
+- Drop obsolete python_provide macro
+- Implement the “full” extra metapackage, dropping the corresponding
+  dependencies from the main package
+- Use pyproject-rpm-macros, including generated BR’s
+- Improved description from upstream
+
 * Wed Feb 03 2021 Filipe Rosset <rosset.filipe@gmail.com> - 0.14.2-1
 - Update to 0.14.2 fixes FTBFS rhbz#1908274
 

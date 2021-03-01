@@ -6,7 +6,7 @@
 
 Name:           python-%{srcname}
 Version:        0.14.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        The little ASGI library that shines
 
 License:        BSD
@@ -35,6 +35,14 @@ BuildRequires:  python3dist(flake8)
 BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(pytest-cov)
 BuildRequires:  python3dist(pytest-asyncio)
+
+%if %{with html_docs}
+# See “Documentation” in requirements.txt. These BR’s cannot be automatically
+# generated.
+BuildRequires:  python3dist(mkdocs)
+BuildRequires:  python3dist(mkdocs-material)
+BuildRequires:  python3dist(mkautodoc)
+%endif
 
 
 %global common_description %{expand:
@@ -73,14 +81,6 @@ Summary:        %{summary}
 
 %package doc
 Summary:        Documentation for %{name}
-
-%if %{with html_docs}
-# See “Documentation” in requirements.txt. These BR’s cannot be automatically
-# generated.
-BuildRequires:  python3dist(mkdocs)
-BuildRequires:  python3dist(mkdocs-material)
-BuildRequires:  python3dist(mkautodoc)
-%endif
 
 %description doc %{common_description}
 
@@ -144,6 +144,9 @@ cp -p '%{SOURCE1}' .
 
 
 %changelog
+* Mon Mar 01 2021 Benjamin A. Beasley <code@musicinmybrain.net> - 0.14.2-4
+- Move documentation BR’s to base package
+
 * Fri Feb 26 2021 Benjamin A. Beasley <code@musicinmybrain.net> - 0.14.2-3
 - Drop mypy BR
 

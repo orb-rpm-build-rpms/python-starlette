@@ -6,7 +6,7 @@
 
 Name:           python-%{srcname}
 Version:        0.14.2
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        The little ASGI library that shines
 
 License:        BSD
@@ -16,7 +16,6 @@ Source1:        pytest.ini
 BuildArch:      noarch
 
 BuildRequires:  python3-devel
-BuildRequires:  python3dist(setuptools)
 BuildRequires:  pyproject-rpm-macros
 
 # These BR’s cannot be generated because they appear only in requirements.txt.
@@ -144,6 +143,9 @@ cp -p '%{SOURCE1}' .
 
 
 %changelog
+* Tue Mar 16 2021 Benjamin A. Beasley <code@musicinmybrain.net> - 0.14.2-5
+- Drop python3dist(setuptools) BR, redundant with %%pyproject_buildrequires
+
 * Mon Mar 01 2021 Benjamin A. Beasley <code@musicinmybrain.net> - 0.14.2-4
 - Move documentation BR’s to base package
 

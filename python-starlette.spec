@@ -4,9 +4,15 @@
 # https://github.com/tomchristie/mkautodoc/issues/30.
 %bcond_with html_docs
 
+%if 0%{?fedora} > 33 || ! 0%{?fedora}
+%bcond_without databases
+%else
+%bcond_with databases
+%endif
+
 Name:           python-%{srcname}
 Version:        0.14.2
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        The little ASGI library that shines
 
 License:        BSD
@@ -28,8 +34,9 @@ BuildRequires:  pyproject-rpm-macros
 #   - isort==5.*
 #   - mypy
 #   - pytest-cov
-# Need to package this:
-#BuildRequires:  python3dist(databases[sqlite])
+%if %{with databases}
+BuildRequires:  python3dist(databases[sqlite])
+%endif
 BuildRequires:  python3dist(flake8)
 BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(pytest-cov)
@@ -116,8 +123,9 @@ cp -rp docs '%{buildroot}%{_pkgdocdir}/markdown'
 
 
 %check
-# Need to package python3-databases first:
+%if %{without databases}
 rm tests/test_database.py
+%endif
 # Built-in GraphQL support is being deprecated
 # (https://github.com/encode/starlette/issues/619), and the tests do not work
 # because they use a legacy graphql-core API that is no longer present:
@@ -143,6 +151,9 @@ cp -p '%{SOURCE1}' .
 
 
 %changelog
+* Fri May 14 2021 Benjamin A. Beasley <code@musicinmybrain.net> - 0.14.2-6
+- Add databases[sqlite] BR for testing where available (F34+)
+
 * Tue Mar 16 2021 Benjamin A. Beasley <code@musicinmybrain.net> - 0.14.2-5
 - Drop python3dist(setuptools) BR, redundant with %%pyproject_buildrequires
 

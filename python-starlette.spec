@@ -12,7 +12,7 @@
 
 Name:           python-%{srcname}
 Version:        0.14.2
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        The little ASGI library that shines
 
 License:        BSD
@@ -46,7 +46,6 @@ BuildRequires:  python3dist(pytest-asyncio)
 # See “Documentation” in requirements.txt. These BR’s cannot be automatically
 # generated.
 BuildRequires:  python3dist(mkdocs)
-BuildRequires:  python3dist(mkdocs-material)
 BuildRequires:  python3dist(mkautodoc)
 %endif
 
@@ -102,6 +101,10 @@ find docs/js -type f |
   do
     cat /dev/null > "${fn}"
   done
+# Drop dependency on mkdocs-material. See
+# https://bugzilla.redhat.com/show_bug.cgi?id=1960274#c3. The result doesn’t
+# look as nice but is still usable.
+sed -r -i 's/\bmaterial\b/mkdocs/' mkdocs.yml
 
 
 %build
@@ -151,6 +154,10 @@ cp -p '%{SOURCE1}' .
 
 
 %changelog
+* Fri May 28 2021 Benjamin A. Beasley <code@musicinmybrain.net> - 0.14.2-7
+- Build documentation without mkdocs-material; this has no effect as long as
+  mkautodoc is not available
+
 * Fri May 14 2021 Benjamin A. Beasley <code@musicinmybrain.net> - 0.14.2-6
 - Add databases[sqlite] BR for testing where available (F34+)
 

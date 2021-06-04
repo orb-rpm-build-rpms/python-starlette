@@ -12,7 +12,7 @@
 
 Name:           python-%{srcname}
 Version:        0.14.2
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        The little ASGI library that shines
 
 License:        BSD
@@ -154,6 +154,9 @@ cp -p '%{SOURCE1}' .
 
 
 %changelog
+* Fri Jun 04 2021 Python Maint <python-maint@redhat.com> - 0.14.2-8
+- Rebuilt for Python 3.10
+
 * Fri May 28 2021 Benjamin A. Beasley <code@musicinmybrain.net> - 0.14.2-7
 - Build documentation without mkdocs-material; this has no effect as long as
   mkautodoc is not available

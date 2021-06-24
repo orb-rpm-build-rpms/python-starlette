@@ -11,13 +11,13 @@
 %endif
 
 Name:           python-%{srcname}
-Version:        0.14.2
-Release:        8%{?dist}
+Version:        0.15.0
+Release:        1%{?dist}
 Summary:        The little ASGI library that shines
 
 License:        BSD
 URL:            https://www.starlette.io/
-Source0:        %{pypi_source}
+Source0:        https://github.com/encode/%{srcname}/archive/%{version}/%{srcname}-%{version}.tar.gz
 Source1:        pytest.ini
 BuildArch:      noarch
 
@@ -27,20 +27,23 @@ BuildRequires:  pyproject-rpm-macros
 # These BR’s cannot be generated because they appear only in requirements.txt.
 # We do not need the “Optionals”, which correspond to the “full” extra, nor
 # those for “Packaging”, which are for uploading to PyPI, but we do need those
-# for “Testing”, except linters, formatters, mypy, pytest-cov:
+# for “Testing”, except linters, formatters, mypy:
 #   - autoflake
 #   - black==20.8b1
+#   - coverage>=5.3
 #   - flake8
 #   - isort==5.*
 #   - mypy
-#   - pytest-cov
+#   - types-requests
+#   - types-contextvars
+#   - types-PyYAML
+#   - types-dataclasses
 %if %{with databases}
 BuildRequires:  python3dist(databases[sqlite])
 %endif
 BuildRequires:  python3dist(flake8)
 BuildRequires:  python3dist(pytest)
-BuildRequires:  python3dist(pytest-cov)
-BuildRequires:  python3dist(pytest-asyncio)
+BuildRequires:  python3dist(trio)
 
 %if %{with html_docs}
 # See “Documentation” in requirements.txt. These BR’s cannot be automatically
@@ -52,21 +55,22 @@ BuildRequires:  python3dist(mkautodoc)
 
 %global common_description %{expand:
 Starlette is a lightweight ASGI framework/toolkit, which is ideal for building
-high performance asyncio services.
+high performance async services.
 
 It is production-ready, and gives you the following:
 
-  * Seriously impressive performance.
-  * WebSocket support.
-  * GraphQL support.
-  * In-process background tasks.
-  * Startup and shutdown events.
-  * Test client built on requests.
-  * CORS, GZip, Static Files, Streaming responses.
-  * Session and Cookie support.
-  * 100% test coverage.
-  * 100% type annotated codebase.
-  * Zero hard dependencies.}
+  • Seriously impressive performance.
+  • WebSocket support.
+  • GraphQL support.
+  • In-process background tasks.
+  • Startup and shutdown events.
+  • Test client built on requests.
+  • CORS, GZip, Static Files, Streaming responses.
+  • Session and Cookie support.
+  • 100% test coverage.
+  • 100% type annotated codebase.
+  • Few hard dependencies.
+  • Compatible with asyncio and trio backends.}
 
 %description %{common_description}
 
@@ -154,6 +158,9 @@ cp -p '%{SOURCE1}' .
 
 
 %changelog
+* Thu Jun 24 2021 Benjamin A. Beasley <code@musicinmybrain.net> - 0.15.0-1
+- Update to 0.15.0 (closes RHBZ#1975613)
+
 * Fri Jun 04 2021 Python Maint <python-maint@redhat.com> - 0.14.2-8
 - Rebuilt for Python 3.10
 

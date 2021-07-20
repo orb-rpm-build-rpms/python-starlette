@@ -11,7 +11,7 @@
 %endif
 
 Name:           python-%{srcname}
-Version:        0.15.0
+Version:        0.16.0
 Release:        %autorelease
 Summary:        The little ASGI library that shines
 

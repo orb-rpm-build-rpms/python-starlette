@@ -12,7 +12,7 @@
 
 Name:           python-%{srcname}
 Version:        0.15.0
-Release:        1%{?dist}
+Release:        %autorelease
 Summary:        The little ASGI library that shines
 
 License:        BSD
@@ -158,42 +158,4 @@ cp -p '%{SOURCE1}' .
 
 
 %changelog
-* Thu Jun 24 2021 Benjamin A. Beasley <code@musicinmybrain.net> - 0.15.0-1
-- Update to 0.15.0 (closes RHBZ#1975613)
-
-* Fri Jun 04 2021 Python Maint <python-maint@redhat.com> - 0.14.2-8
-- Rebuilt for Python 3.10
-
-* Fri May 28 2021 Benjamin A. Beasley <code@musicinmybrain.net> - 0.14.2-7
-- Build documentation without mkdocs-material; this has no effect as long as
-  mkautodoc is not available
-
-* Fri May 14 2021 Benjamin A. Beasley <code@musicinmybrain.net> - 0.14.2-6
-- Add databases[sqlite] BR for testing where available (F34+)
-
-* Tue Mar 16 2021 Benjamin A. Beasley <code@musicinmybrain.net> - 0.14.2-5
-- Drop python3dist(setuptools) BR, redundant with %%pyproject_buildrequires
-
-* Mon Mar 01 2021 Benjamin A. Beasley <code@musicinmybrain.net> - 0.14.2-4
-- Move documentation BR’s to base package
-
-* Fri Feb 26 2021 Benjamin A. Beasley <code@musicinmybrain.net> - 0.14.2-3
-- Drop mypy BR
-
-* Thu Feb 25 2021 Benjamin A. Beasley <code@musicinmybrain.net> - 0.14.2-2
-- Use srcname macro instead of pypi_name
-- Drop obsolete python_provide macro
-- Implement the “full” extra metapackage, dropping the corresponding
-  dependencies from the main package
-- Use pyproject-rpm-macros, including generated BR’s
-- Improved description from upstream
-
-* Wed Feb 03 2021 Filipe Rosset <rosset.filipe@gmail.com> - 0.14.2-1
-- Update to 0.14.2 fixes FTBFS rhbz#1908274
-
-* Wed Jan 27 2021 Fedora Release Engineering <releng@fedoraproject.org> - 0.13.8-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
-
-* Wed Sep 30 2020 Itamar Reis Peixoto <itamar@ispbrasil.com.br> - 0.13.8-1
-- Initial package.
-- Switch to github sources and enable some tests
+%autochangelog

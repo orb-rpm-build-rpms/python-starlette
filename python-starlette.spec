@@ -75,10 +75,6 @@ It is production-ready, and gives you the following:
 %description %{common_description}
 
 
-%generate_buildrequires
-%pyproject_buildrequires -x full
-
-
 %pyproject_extras_subpkg -n python3-%{srcname} full
 
 
@@ -109,6 +105,10 @@ find docs/js -type f |
 # https://bugzilla.redhat.com/show_bug.cgi?id=1960274#c3. The result doesn’t
 # look as nice but is still usable.
 sed -r -i 's/\bmaterial\b/mkdocs/' mkdocs.yml
+
+
+%generate_buildrequires
+%pyproject_buildrequires -x full
 
 
 %build

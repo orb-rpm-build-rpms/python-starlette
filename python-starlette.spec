@@ -1,8 +1,10 @@
 %global srcname starlette
 
-# Need to package mkautodoc to build these; that, in turn, should wait on
-# https://github.com/tomchristie/mkautodoc/issues/30.
-%bcond_with html_docs
+# As of 2021-08-11, mkdocs and many of its dependencies are orphaned.
+#
+# We would also need to package mkautodoc to build these; that, in turn, should
+# wait on https://github.com/tomchristie/mkautodoc/issues/30.
+%bcond_with mkdocs
 
 %if 0%{?fedora} > 33 || ! 0%{?fedora}
 %bcond_without databases
@@ -45,7 +47,7 @@ BuildRequires:  python3dist(flake8)
 BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(trio)
 
-%if %{with html_docs}
+%if %{with mkdocs}
 # See “Documentation” in requirements.txt. These BR’s cannot be automatically
 # generated.
 BuildRequires:  python3dist(mkdocs)
@@ -113,7 +115,7 @@ sed -r -i 's/\bmaterial\b/mkdocs/' mkdocs.yml
 
 %build
 %pyproject_wheel
-%if %{with html_docs}
+%if %{with mkdocs}
 mkdocs build
 %endif
 
@@ -122,7 +124,7 @@ mkdocs build
 %pyproject_install
 %pyproject_save_files %{srcname}
 install -t '%{buildroot}%{_pkgdocdir}' -D -m 0644 -p README.md
-%if %{with html_docs}
+%if %{with mkdocs}
 cp -rp site '%{buildroot}%{_pkgdocdir}/'
 %else
 cp -rp docs '%{buildroot}%{_pkgdocdir}/markdown'

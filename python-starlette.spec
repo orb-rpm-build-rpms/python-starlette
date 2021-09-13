@@ -83,8 +83,6 @@ Summary:        Documentation for %{name}
 
 %prep
 %autosetup -n starlette-%{version}
-# Remove bundled egg-info
-rm -rf starlette.egg-info
 # Remove Gitter chat app from documentation; it relies on pre-compiled/minified
 # JavaScript, which is not acceptable in Fedora.
 find docs/js -type f |

@@ -151,7 +151,6 @@ cp -p '%{SOURCE1}' .
 
 
 %files -n python3-%{srcname} -f %{pyproject_files}
-%license LICENSE.md
 
 
 %files doc

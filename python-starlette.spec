@@ -6,12 +6,6 @@
 # wait on https://github.com/tomchristie/mkautodoc/issues/30.
 %bcond_with mkdocs
 
-%if 0%{?fedora} > 33 || ! 0%{?fedora}
-%bcond_without databases
-%else
-%bcond_with databases
-%endif
-
 Name:           python-%{srcname}
 Version:        0.16.0
 Release:        %autorelease
@@ -40,9 +34,7 @@ BuildRequires:  pyproject-rpm-macros
 #   - types-contextvars
 #   - types-PyYAML
 #   - types-dataclasses
-%if %{with databases}
 BuildRequires:  python3dist(databases[sqlite])
-%endif
 BuildRequires:  python3dist(flake8)
 BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(trio)
@@ -132,9 +124,6 @@ cp -rp docs '%{buildroot}%{_pkgdocdir}/markdown'
 
 
 %check
-%if %{without databases}
-rm tests/test_database.py
-%endif
 # Built-in GraphQL support is being deprecated
 # (https://github.com/encode/starlette/issues/619), and the tests do not work
 # because they use a legacy graphql-core API that is no longer present:

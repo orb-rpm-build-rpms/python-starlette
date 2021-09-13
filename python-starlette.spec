@@ -1,19 +1,17 @@
-%global srcname starlette
-
 # As of 2021-08-11, mkdocs and many of its dependencies are orphaned.
 #
 # We would also need to package mkautodoc to build these; that, in turn, should
 # wait on https://github.com/tomchristie/mkautodoc/issues/30.
 %bcond_with mkdocs
 
-Name:           python-%{srcname}
+Name:           python-starlette
 Version:        0.16.0
 Release:        %autorelease
 Summary:        The little ASGI library that shines
 
 License:        BSD
 URL:            https://www.starlette.io/
-Source0:        https://github.com/encode/%{srcname}/archive/%{version}/%{srcname}-%{version}.tar.gz
+Source0:        https://github.com/encode/starlette/archive/%{version}/starlette-%{version}.tar.gz
 Source1:        pytest.ini
 BuildArch:      noarch
 
@@ -69,13 +67,13 @@ It is production-ready, and gives you the following:
 %description %{common_description}
 
 
-%pyproject_extras_subpkg -n python3-%{srcname} full
+%pyproject_extras_subpkg -n python3-starlette full
 
 
-%package -n     python3-%{srcname}
+%package -n     python3-starlette
 Summary:        %{summary}
 
-%description -n python3-%{srcname} %{common_description}
+%description -n python3-starlette %{common_description}
 
 
 %package doc
@@ -85,9 +83,9 @@ Summary:        Documentation for %{name}
 
 
 %prep
-%autosetup -n %{srcname}-%{version}
+%autosetup -n starlette-%{version}
 # Remove bundled egg-info
-rm -rf %{srcname}.egg-info
+rm -rf starlette.egg-info
 # Remove Gitter chat app from documentation; it relies on pre-compiled/minified
 # JavaScript, which is not acceptable in Fedora.
 find docs/js -type f |
@@ -114,7 +112,7 @@ mkdocs build
 
 %install
 %pyproject_install
-%pyproject_save_files %{srcname}
+%pyproject_save_files starlette
 install -t '%{buildroot}%{_pkgdocdir}' -D -m 0644 -p README.md
 %if %{with mkdocs}
 cp -rp site '%{buildroot}%{_pkgdocdir}/'
@@ -139,7 +137,7 @@ cp -p '%{SOURCE1}' .
 %pytest
 
 
-%files -n python3-%{srcname} -f %{pyproject_files}
+%files -n python3-starlette -f %{pyproject_files}
 
 
 %files doc

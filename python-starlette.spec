@@ -16,7 +16,6 @@ Source1:        pytest.ini
 BuildArch:      noarch
 
 BuildRequires:  python3-devel
-BuildRequires:  pyproject-rpm-macros
 
 # These BR’s cannot be generated because they appear only in requirements.txt.
 # We do not need the “Optionals”, which correspond to the “full” extra, nor

@@ -1,9 +1,3 @@
-# As of 2021-08-11, mkdocs and many of its dependencies are orphaned.
-#
-# We would also need to package mkautodoc to build these; that, in turn, should
-# wait on https://github.com/tomchristie/mkautodoc/issues/30.
-%bcond_with mkdocs
-
 Name:           python-starlette
 Version:        0.16.0
 Release:        %autorelease
@@ -36,13 +30,7 @@ BuildRequires:  python3dist(flake8)
 BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(trio)
 
-%if %{with mkdocs}
-# See “Documentation” in requirements.txt. These BR’s cannot be automatically
-# generated.
-BuildRequires:  python3dist(mkdocs)
-BuildRequires:  python3dist(mkautodoc)
-%endif
-
+Obsoletes:      python-starlette-doc < 0.16.0-10
 
 %global common_description %{expand:
 Starlette is a lightweight ASGI framework/toolkit, which is ideal for building
@@ -75,25 +63,12 @@ Summary:        %{summary}
 %description -n python3-starlette %{common_description}
 
 
-%package doc
-Summary:        Documentation for %{name}
-
-%description doc %{common_description}
-
-
 %prep
 %autosetup -n starlette-%{version}
 # Remove Gitter chat app from documentation; it relies on pre-compiled/minified
-# JavaScript, which is not acceptable in Fedora.
-find docs/js -type f |
-  while read -r fn
-  do
-    cat /dev/null > "${fn}"
-  done
-# Drop dependency on mkdocs-material. See
-# https://bugzilla.redhat.com/show_bug.cgi?id=1960274#c3. The result doesn’t
-# look as nice but is still usable.
-sed -r -i 's/\bmaterial\b/mkdocs/' mkdocs.yml
+# JavaScript, which is not acceptable in Fedora. Since we are not building
+# documentation, we do this very bluntly:
+rm -vrf docs/js
 
 
 %generate_buildrequires
@@ -102,20 +77,11 @@ sed -r -i 's/\bmaterial\b/mkdocs/' mkdocs.yml
 
 %build
 %pyproject_wheel
-%if %{with mkdocs}
-mkdocs build
-%endif
 
 
 %install
 %pyproject_install
 %pyproject_save_files starlette
-install -t '%{buildroot}%{_pkgdocdir}' -D -m 0644 -p README.md
-%if %{with mkdocs}
-cp -rp site '%{buildroot}%{_pkgdocdir}/'
-%else
-cp -rp docs '%{buildroot}%{_pkgdocdir}/markdown'
-%endif
 
 
 %check
@@ -135,11 +101,7 @@ cp -p '%{SOURCE1}' .
 
 
 %files -n python3-starlette -f %{pyproject_files}
-
-
-%files doc
-%license LICENSE.md
-%{_pkgdocdir}
+%doc README.md
 
 
 %changelog

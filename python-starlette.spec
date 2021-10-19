@@ -26,7 +26,6 @@ BuildRequires:  python3-devel
 #   - types-PyYAML
 #   - types-dataclasses
 BuildRequires:  python3dist(databases[sqlite])
-BuildRequires:  python3dist(flake8)
 BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(trio)
 

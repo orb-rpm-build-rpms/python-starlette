@@ -1,12 +1,11 @@
 Name:           python-starlette
-Version:        0.16.0
+Version:        0.17.0
 Release:        %autorelease
 Summary:        The little ASGI library that shines
 
 License:        BSD
 URL:            https://www.starlette.io/
 Source0:        https://github.com/encode/starlette/archive/%{version}/starlette-%{version}.tar.gz
-Source1:        pytest.ini
 BuildArch:      noarch
 
 BuildRequires:  python3-devel
@@ -39,7 +38,6 @@ It is production-ready, and gives you the following:
 
   • Seriously impressive performance.
   • WebSocket support.
-  • GraphQL support.
   • In-process background tasks.
   • Startup and shutdown events.
   • Test client built on requests.
@@ -84,18 +82,6 @@ rm -vrf docs/js
 
 
 %check
-# Built-in GraphQL support is being deprecated
-# (https://github.com/encode/starlette/issues/619), and the tests do not work
-# because they use a legacy graphql-core API that is no longer present:
-#       from graphql.execution.executors.asyncio import AsyncioExecutor
-#   E   ModuleNotFoundError: No module named 'graphql.execution.executors'
-rm tests/test_graphql.py
-
-# Sanity check: we do not want to overwrite an existing pytest.ini:
-! [ -e pytest.ini ]
-# See the file itself for comments on why this is needed.
-cp -p '%{SOURCE1}' .
-
 %pytest
 
 

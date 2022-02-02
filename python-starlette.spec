@@ -1,5 +1,5 @@
 Name:           python-starlette
-Version:        0.17.1
+Version:        0.18.0
 Release:        %autorelease
 Summary:        The little ASGI library that shines
 
@@ -9,24 +9,6 @@ Source0:        https://github.com/encode/starlette/archive/%{version}/starlette
 BuildArch:      noarch
 
 BuildRequires:  python3-devel
-
-# These BR’s cannot be generated because they appear only in requirements.txt.
-# We do not need the “Optionals”, which correspond to the “full” extra, nor
-# those for “Packaging”, which are for uploading to PyPI, but we do need those
-# for “Testing”, except linters, formatters, mypy:
-#   - autoflake
-#   - black==20.8b1
-#   - coverage>=5.3
-#   - flake8
-#   - isort==5.*
-#   - mypy
-#   - types-requests
-#   - types-contextvars
-#   - types-PyYAML
-#   - types-dataclasses
-BuildRequires:  python3dist(databases[sqlite])
-BuildRequires:  python3dist(pytest)
-BuildRequires:  python3dist(trio)
 
 Obsoletes:      python-starlette-doc < 0.16.0-10
 
@@ -62,14 +44,37 @@ Summary:        %{summary}
 
 %prep
 %autosetup -n starlette-%{version}
+
 # Remove Gitter chat app from documentation; it relies on pre-compiled/minified
 # JavaScript, which is not acceptable in Fedora. Since we are not building
 # documentation, we do this very bluntly:
 rm -vrf docs/js
 
+# Produce a filtered version of requirements.txt, which contains testing
+# dependencies.
+#
+# We do not need the “Optionals”, which correspond to the “full” extra we are
+# already BR’ing; those for “Packaging”, which are for uploading to PyPI; or
+# those for “Documentation”, so long as we are not able to build and package
+# it; but we do need those for “Testing”, except linters, formatters, coverage
+# analysis, and mypy-related dependencies.
+#
+# Loosen exact-version dependencies.
+awk '
+!NF { next }
+$1 == "#" {
+  o = $2 !~ /^(Optionals|Documentation|Packaging)$/
+  next
+}
+o {
+  if ($1 ~ /^(black|coverage|(auto)?flake8?|isort|mypy|types-)/) { next }
+  print $0
+}
+' requirements.txt | sed -r 's/==/>=/' | tee requirements-filtered.txt
+
 
 %generate_buildrequires
-%pyproject_buildrequires -x full
+%pyproject_buildrequires -x full requirements-filtered.txt
 
 
 %build

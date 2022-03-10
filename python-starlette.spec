@@ -1,5 +1,5 @@
 Name:           python-starlette
-Version:        0.18.0
+Version:        0.19.0
 Release:        %autorelease
 Summary:        The little ASGI library that shines
 
@@ -14,11 +14,11 @@ Obsoletes:      python-starlette-doc < 0.16.0-10
 
 %global common_description %{expand:
 Starlette is a lightweight ASGI framework/toolkit, which is ideal for building
-high performance async services.
+async web services in Python.
 
 It is production-ready, and gives you the following:
 
-  • Seriously impressive performance.
+  • A lightweight, low-complexity HTTP web framework.
   • WebSocket support.
   • In-process background tasks.
   • Startup and shutdown events.
@@ -28,7 +28,8 @@ It is production-ready, and gives you the following:
   • 100%% test coverage.
   • 100%% type annotated codebase.
   • Few hard dependencies.
-  • Compatible with asyncio and trio backends.}
+  • Compatible with asyncio and trio backends.
+  • Great overall performance against independant benchmarks.}
 
 %description %{common_description}
 
@@ -71,6 +72,10 @@ o {
   print $0
 }
 ' requirements.txt | sed -r 's/==/>=/' | tee requirements-filtered.txt
+# Furthermore, we do not yet have the desired pytest version, so we allow an
+# older one that seems to work. This sed-patch can be removed once
+# https://src.fedoraproject.org/rpms/pytest/pull-request/25 is merged.
+sed -r -i 's/^(pytest>=)7\.0\.1$/\16\.2\.5/' requirements-filtered.txt
 
 
 %generate_buildrequires

@@ -72,10 +72,6 @@ o {
   print $0
 }
 ' requirements.txt | sed -r 's/==/>=/' | tee requirements-filtered.txt
-# Furthermore, we do not yet have the desired pytest version, so we allow an
-# older one that seems to work. This sed-patch can be removed once
-# https://src.fedoraproject.org/rpms/pytest/pull-request/25 is merged.
-sed -r -i 's/^(pytest>=)7\.0\.1$/\16\.2\.5/' requirements-filtered.txt
 
 
 %generate_buildrequires

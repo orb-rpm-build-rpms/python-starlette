@@ -1,10 +1,9 @@
 Name:           python-starlette
-Version:        0.19.1
+Version:        0.20.0
 Release:        %autorelease
 Summary:        The little ASGI library that shines
 
-# The entire source is BSD, except starlette/_pep562.py, which is MIT
-License:        BSD and MIT
+License:        BSD
 URL:            https://www.starlette.io/
 Source0:        https://github.com/encode/starlette/archive/%{version}/starlette-%{version}.tar.gz
 BuildArch:      noarch
@@ -40,10 +39,6 @@ It is production-ready, and gives you the following:
 
 %package -n     python3-starlette
 Summary:        %{summary}
-
-# Use pep562 as a dependency rather than bundling?
-# https://github.com/encode/starlette/discussions/1604
-Provides:       bundled(python3dist(pep562))
 
 %description -n python3-starlette %{common_description}
 

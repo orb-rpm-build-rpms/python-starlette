@@ -3,7 +3,10 @@ Version:        0.20.4
 Release:        %autorelease
 Summary:        The little ASGI library that shines
 
-License:        BSD
+# The entire source is BSD-3-Clause, with the possible exception of the
+# pre-compiled/minified JavaScript for the Gitter chat app for the
+# documentation, which is removed in %%prep anyway.
+License:        BSD-3-Clause
 URL:            https://www.starlette.io/
 Source0:        https://github.com/encode/starlette/archive/%{version}/starlette-%{version}.tar.gz
 BuildArch:      noarch

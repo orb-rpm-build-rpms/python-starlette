@@ -1,11 +1,8 @@
 Name:           python-starlette
-Version:        0.31.1
+Version:        0.32.0
 Release:        %autorelease
 Summary:        The little ASGI library that shines
 
-# The entire source is BSD-3-Clause, with the possible exception of the
-# pre-compiled/minified JavaScript for the Gitter chat app for the
-# documentation, which is removed in %%prep anyway.
 License:        BSD-3-Clause
 URL:            https://www.starlette.io/
 Source:         https://github.com/encode/starlette/archive/%{version}/starlette-%{version}.tar.gz
@@ -49,11 +46,6 @@ Summary:        %{summary}
 
 %prep
 %autosetup -n starlette-%{version}
-
-# Remove Gitter chat app from documentation; it relies on pre-compiled/minified
-# JavaScript, which is not acceptable in Fedora. Since we are not building
-# documentation, we do this very bluntly:
-rm -vrf docs/js
 
 # Produce a filtered version of requirements.txt, which contains testing
 # dependencies.
@@ -103,22 +95,6 @@ o {
 #           Trio 0.22.0; use BaseExceptionGroup (on Python 3.11 and later) or
 #           exceptiongroup.BaseExceptionGroup (earlier versions) instead
 #           (https://github.com/python-trio/trio/issues/2211)
-
-# Report this upstream if it is still present by the time FastAPI supports this
-# version.
-#
-# _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-#
-# environ = {'HTTP_ACCEPT': '*/*', 'HTTP_ACCEPT_ENCODING': 'gzip, deflate', 'HTTP_CONNECTION': 'keep-alive', 'HTTP_HOST': 'testserver', ...}
-# start_response = <bound method WSGIResponder.start_response of <starlette.middleware.wsgi.WSGIResponder object at 0x7fe648321250>>
-#
-#     def raise_exception(environ, start_response):
-# >       raise RuntimeError("Something went wrong")
-# E       RuntimeError: Something went wrong
-#
-# tests/middleware/test_wsgi.py:34: RuntimeError
-k="${k-}${k+ and }not test_wsgi_exception[asyncio]"
-k="${k-}${k+ and }not test_wsgi_exception[trio]"
 %pytest -W 'ignore::trio.TrioDeprecationWarning' -k "${k-}"
 
 

@@ -1,0 +1,7 @@
+# It is normal that extras metapackages should not have documentation, or any
+# files at all.
+addFilter(r"\+\w+.noarch: W: no-documentation")
+# This is not a spelling error
+addFilter(r"spelling-error \('([Mm]etapackage)s?',")
+# Neither are these
+addFilter(r"spelling-error \('(([Cc]odebase)s?|[Aa]sync(io)?)',")

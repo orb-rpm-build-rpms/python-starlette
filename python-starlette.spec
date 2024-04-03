@@ -43,13 +43,13 @@ It is production-ready, and gives you the following:
 %description %{common_description}
 
 
-%pyproject_extras_subpkg -n python3-starlette full
-
-
 %package -n     python3-starlette
 Summary:        %{summary}
 
 %description -n python3-starlette %{common_description}
+
+
+%pyproject_extras_subpkg -n python3-starlette full
 
 
 %prep

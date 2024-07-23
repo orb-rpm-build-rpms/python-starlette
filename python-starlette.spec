@@ -7,6 +7,23 @@ License:        BSD-3-Clause
 URL:            https://www.starlette.io/
 Source:         https://github.com/encode/starlette/archive/%{version}/starlette-%{version}.tar.gz
 
+# Fix 3.13.0b3/b4 compatibility:
+#   Fix `routing.get_name()` not to assume all routines have `__name__`
+#   https://github.com/encode/starlette/pull/2648
+#
+# This is a workaround for a change in Python 3.13.0b3:
+#   https://github.com/python/cpython/commit/49e5740135670e04ae6da7e6f52dbe380655e0f1
+#
+# It is possible that this will be considered a Python bug/regression and fixed
+# by 3.13.0 final. It was reported as a possible bug in:
+#   3.13.0b3: undocumented change in inspect.isroutine() for functools.partial
+#   https://github.com/python/cpython/issues/122087
+# …and there should be a decision or resolution one way or the other by Python
+# 3.13.0rc1. This should therefore be a temporary patch, and it should be
+# either merged upstream or dropped as unnecessary after Python 3.13.0rc1 is
+# released.
+Patch:          https://github.com/encode/starlette/pull/2648.patch
+
 BuildArch:      noarch
 
 BuildRequires:  python3-devel
@@ -53,7 +70,7 @@ Summary:        %{summary}
 
 
 %prep
-%autosetup -n starlette-%{version}
+%autosetup -n starlette-%{version} -p1
 
 
 %generate_buildrequires

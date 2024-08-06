@@ -7,6 +7,10 @@ License:        BSD-3-Clause
 URL:            https://www.starlette.io/
 Source:         https://github.com/encode/starlette/archive/%{version}/starlette-%{version}.tar.gz
 
+# Support Python 3.13
+# https://github.com/encode/starlette/pull/2662
+Patch:          https://github.com/encode/starlette/pull/2662.patch
+
 BuildArch:      noarch
 
 BuildRequires:  python3-devel
@@ -81,18 +85,6 @@ warningsfilter="${warningsfilter-} -W ignore::trio.TrioDeprecationWarning"
 #         emitted.
 # E       The list of emitted warnings is: [].
 k="${k-}${k+ and }not test_lifespan_with_on_events"
-
-%if v"0%{?python3_version}" >= v"3.13"
-# Python 3.13.0b2: KeyError: 'content-type' in test_debug_html[asyncio] and
-# test_debug_html[trio]
-# https://github.com/encode/starlette/issues/2614
-k="${k-}${k+ and }not test_debug_html[asyncio]"
-k="${k-}${k+ and }not test_debug_html[trio]"
-# Python 3.13.0b2: test_gzip_ignored_for_responses_with_encoding_set[trio]
-# fails with a ValueError: I/O operation on closed file
-# https://github.com/encode/starlette/issues/2615
-warningsfilter="${warningsfilter-} -W ignore::pytest.PytestUnraisableExceptionWarning"
-%endif
 
 %pytest ${warningsfilter-} -k "${k-}" -v
 

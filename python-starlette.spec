@@ -1,15 +1,11 @@
 Name:           python-starlette
-Version:        0.38.2
+Version:        0.38.4
 Release:        %autorelease
 Summary:        The little ASGI library that shines
 
 License:        BSD-3-Clause
 URL:            https://www.starlette.io/
 Source:         https://github.com/encode/starlette/archive/%{version}/starlette-%{version}.tar.gz
-
-# Support Python 3.13
-# https://github.com/encode/starlette/pull/2662
-Patch:          https://github.com/encode/starlette/pull/2662.patch
 
 BuildArch:      noarch
 

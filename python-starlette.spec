@@ -1,5 +1,5 @@
 Name:           python-starlette
-Version:        0.40.0
+Version:        0.41.2
 Release:        %autorelease
 Summary:        The little ASGI library that shines
 

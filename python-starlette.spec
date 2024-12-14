@@ -22,8 +22,6 @@ BuildRequires:  %{py3_dist pytest}
 BuildRequires:  %{py3_dist trio}
 BuildRequires:  %{py3_dist typing_extensions}
 
-Obsoletes:      python-starlette-doc < 0.16.0-10
-
 %global common_description %{expand:
 Starlette is a lightweight ASGI framework/toolkit, which is ideal for building
 async web services in Python.

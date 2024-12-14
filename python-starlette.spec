@@ -7,9 +7,12 @@ License:        BSD-3-Clause
 URL:            https://www.starlette.io/
 Source:         https://github.com/encode/starlette/archive/%{version}/starlette-%{version}.tar.gz
 
+BuildSystem:            pyproject
+BuildOption(install):   -l starlette
+BuildOption(generate_buildrequires): -x full
+
 BuildArch:      noarch
 
-BuildRequires:  python3-devel
 # The file requirements.txt pins exact versions and contains many unwanted
 # dependencies, e.g. linters and typecheckers (see
 # https://docs.fedoraproject.org/en-US/packaging-guidelines/Python/#_linters).
@@ -52,24 +55,7 @@ Summary:        %{summary}
 %pyproject_extras_subpkg -n python3-starlette full
 
 
-%prep
-%autosetup -n starlette-%{version} -p1
-
-
-%generate_buildrequires
-%pyproject_buildrequires -x full
-
-
-%build
-%pyproject_wheel
-
-
-%install
-%pyproject_install
-%pyproject_save_files -l starlette
-
-
-%check
+%check -a
 # E       trio.TrioDeprecationWarning: The `cancellable=` keyword argument to
 #         `trio.to_thread.run_sync` is deprecated since Trio 0.23.0; use
 #         `abandon_on_cancel=` instead

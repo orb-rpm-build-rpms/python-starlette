@@ -5,3 +5,7 @@ addFilter(r"\+\w+.noarch: W: no-documentation")
 addFilter(r"spelling-error \('([Mm]etapackage)s?',")
 # Neither are these
 addFilter(r"spelling-error \('(([Cc]odebase)s?|[Aa]sync(io)?)',")
+# Implicit sections (declarative buildsystem)
+addFilter(r" no-%(prep|install|build)-section")
+# Implicit due to use of declarative build system
+addFilter(r" patch-not-applied ")

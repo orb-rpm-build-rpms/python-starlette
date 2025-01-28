@@ -1,0 +1,36 @@
+From 9b7aa5f3c480214a6327455a3eae18181f9a11cd Mon Sep 17 00:00:00 2001
+From: "Benjamin A. Beasley" <code@musicinmybrain.net>
+Date: Tue, 28 Jan 2025 07:19:42 -0500
+Subject: [PATCH] Get iscoroutinefunction() from inspect rather than asyncio
+
+Python 3.14.0a3 issues a DeprecationWarning for
+asyncio.iscoroutinefunction(), stating that it is deprecated and slated
+for removal in Python 3.16 and recommending
+inspect.iscoroutinefunction() instead. This change resolves that
+DeprecationWarning.
+---
+ starlette/_utils.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/starlette/_utils.py b/starlette/_utils.py
+index 0c389dcb2..8001c4722 100644
+--- a/starlette/_utils.py
++++ b/starlette/_utils.py
+@@ -1,7 +1,7 @@
+ from __future__ import annotations
+ 
+-import asyncio
+ import functools
++import inspect
+ import sys
+ import typing
+ from contextlib import contextmanager
+@@ -36,7 +36,7 @@ def is_async_callable(obj: typing.Any) -> typing.Any:
+     while isinstance(obj, functools.partial):
+         obj = obj.func
+ 
+-    return asyncio.iscoroutinefunction(obj) or (callable(obj) and asyncio.iscoroutinefunction(obj.__call__))
++    return inspect.iscoroutinefunction(obj) or (callable(obj) and inspect.iscoroutinefunction(obj.__call__))
+ 
+ 
+ T_co = typing.TypeVar("T_co", covariant=True)

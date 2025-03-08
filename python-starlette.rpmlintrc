@@ -7,5 +7,3 @@ addFilter(r"spelling-error \('([Mm]etapackage)s?',")
 addFilter(r"spelling-error \('(([Cc]odebase)s?|[Aa]sync(io)?)',")
 # Implicit sections (declarative buildsystem)
 addFilter(r" no-%(prep|install|build)-section")
-# Implicit due to use of declarative build system
-addFilter(r" patch-not-applied ")

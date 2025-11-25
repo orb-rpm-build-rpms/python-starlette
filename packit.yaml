@@ -6,7 +6,3 @@ jobs:
     trigger: release
     dist_git_branches:
       - fedora-rawhide
-  - job: koji_build
-    trigger: commit
-    dist_git_branches:
-      - fedora-all

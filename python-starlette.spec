@@ -7,6 +7,8 @@ License:        BSD-3-Clause
 URL:            https://www.starlette.io/
 Source:         https://github.com/encode/starlette/archive/%{version}/starlette-%{version}.tar.gz
 
+Patch:          python-starlette-1.2.0-PR3295-undo.patch
+
 BuildSystem:    pyproject
 BuildOption(generate_buildrequires): --extras full
 BuildOption(install): --assert-license starlette

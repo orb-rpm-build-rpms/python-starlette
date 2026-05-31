@@ -1,2 +1,0 @@
-# These are not a spelling erroisr
-addFilter(r"spelling-error \('(([Cc]odebase)s?|[Aa]sync(io)?)',")

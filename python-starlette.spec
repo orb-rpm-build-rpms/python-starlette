@@ -44,7 +44,7 @@ It is production-ready, and gives you the following:
 %description %{common_description}
 
 
-%package -n     python3-starlette
+%package -n python3-starlette
 Summary:        %{summary}
 
 %description -n python3-starlette %{common_description}

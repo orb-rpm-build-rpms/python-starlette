@@ -50,7 +50,7 @@ Summary:        %{summary}
 %description -n python3-starlette %{common_description}
 
 
-%pyproject_extras_subpkg -n python3-starlette full
+%pyproject_extras_subpkg --name python3-starlette full
 
 
 %check -a

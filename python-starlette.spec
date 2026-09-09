@@ -54,7 +54,13 @@ Summary:        %{summary}
 
 
 %check -a
-%pytest --verbose
+# test_staticfiles_with_invalid_dir_permissions_returns_401 makes a directory
+# unreadable and expects a 401. It only holds for an unprivileged reader: this
+# build runs as root, whose CAP_DAC_OVERRIDE bypasses the permission bits, so the
+# file is served (200) and the assertion fails. Deselect it rather than skip the
+# whole suite.
+%pytest --verbose \
+        --deselect="tests/test_staticfiles.py::test_staticfiles_with_invalid_dir_permissions_returns_401"
 
 
 %files -n python3-starlette -f %{pyproject_files}
